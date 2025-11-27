@@ -1,0 +1,6 @@
+streamlit>=1.37
+pandas>=2.1
+pymongo>=4.6
+requests>=2.31
+altair>=5.2
+google-genai>=0.3

@@ -1,0 +1,12 @@
+pymongo
+pocketflow
+plotly
+pandas
+numpy
+scipy
+matplotlib
+openai
+google-genai
+fastapi
+uvicorn[standard]
+pydantic

@@ -1,0 +1,41 @@
+services:
+  mongodb:
+    image: mongo:8.0.4-rc0
+    container_name: sme-mongodb
+    ports:
+      - "27018:27017"  # External port 27018, internal port 27017
+    environment:
+      - MONGO_INITDB_DATABASE=SME_DB
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - sme-network
+
+  text-2-mongo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: text-2-mongo
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/  # Use service name for internal communication
+      - DB_NAME=SME_DB
+      - LLM_PROVIDER=${LLM_PROVIDER:-openai}
+      - OPENROUTER_MODEL=${OPENROUTER_MODEL:-qwen/qwen3-coder:free}
+      - OPENROUTER_BASE_URL=${OPENROUTER_BASE_URL:-https://openrouter.ai/api/v1}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    networks:
+      - sme-network
+
+volumes:
+  mongodb_data:
+    name: app_mongodb_data
+
+networks:
+  sme-network:
+    driver: bridge
